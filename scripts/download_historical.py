@@ -1,55 +1,62 @@
 import os
 import pandas as pd
 import yfinance as yf
-from datetime import datetime
 
-# Define paths
-BRONZE_FOLDER = "data/bronze/stocks/"
-TICKERS_FILE = os.path.join(BRONZE_FOLDER, "SP500-tickers.csv")
-OUTPUT_FILE = os.path.join(BRONZE_FOLDER, "final_price.csv")
-
-# Ensure the folder exists
-os.makedirs(BRONZE_FOLDER, exist_ok=True)
+# Constants
+TICKERS_FILE = 'data/bronze/stocks/SP500-tickers.csv'
+HISTORICAL_DIR = 'data/bronze/stocks/historical'
+START_DATE = "2014-01-01"
 
 
-def download_consolidated_close_prices():
-    # Load the tickers list
+def load_tickers(file_path):
+    """Load tickers from a CSV file."""
+    if not os.path.isfile(file_path):
+        raise FileNotFoundError(f"Ticker file not found: {file_path}. Please ensure the file exists.")
+    tickers_df = pd.read_csv(file_path)
+    return tickers_df['Symbol'].tolist()
+
+
+def create_directory(directory_path):
+    """Ensure the directory exists."""
+    os.makedirs(directory_path, exist_ok=True)
+
+
+def download_historical_data(tickers, save_dir, start_date):
+    """Download historical data for a list of tickers and save them."""
+    errors = []
+
+    # Batch download all tickers at once
     try:
-        tickers_df = pd.read_csv(TICKERS_FILE)
-        tickers = tickers_df["Symbol"].tolist()
+        data = yf.download(tickers, start=start_date, group_by="ticker")
+
+        for ticker in tickers:
+            ticker_data = data.get(ticker)
+            if ticker_data is None or ticker_data.empty:
+                errors.append(f"No data for {ticker}.")
+                continue
+
+            # Save ticker data to CSV
+            csv_file = os.path.join(save_dir, f"{ticker}.csv")
+            ticker_data.to_csv(csv_file)
     except Exception as e:
-        print(f"Error loading tickers file: {e}")
-        return
+        errors.append(f"Batch download error: {e}")
 
-    # Define the time range (last 10 years)
-    end_date = datetime.now().strftime("%Y-%m-%d")
-    start_date = (datetime.now() - pd.DateOffset(years=10)).strftime("%Y-%m-%d")
+    # Log errors if any
+    if errors:
+        print("\n".join(errors))
 
-    # Create a DataFrame to store close price data
-    close_prices_df = pd.DataFrame(index=pd.date_range(start=start_date, end=end_date, freq='D'))
 
-    # Loop through the tickers and retrieve close price data
-    for ticker in tickers:
-        try:
-            print(f"Fetching data for {ticker}...")
-            # Retrieve historical data
-            ticker_data = yf.download(ticker, start=start_date, end=end_date)
+def main():
+    """Main function to execute the script."""
+    # Load tickers
+    tickers = load_tickers(TICKERS_FILE)
 
-            if not ticker_data.empty:
-                # Extract the 'Close' column and rename it with the ticker symbol
-                ticker_close = ticker_data['Close'].rename(ticker)
-                # Merge the close prices into the consolidated DataFrame
-                close_prices_df = pd.merge(close_prices_df, ticker_close, how='left', left_index=True, right_index=True)
-                print(f"Added {ticker} to the DataFrame.")
-            else:
-                print(f"No data found for {ticker}.")
-        except Exception as e:
-            print(f"Error fetching data for {ticker}: {e}")
+    # Ensure the directory exists
+    create_directory(HISTORICAL_DIR)
 
-    # Save the consolidated DataFrame to a CSV file
-    close_prices_df.to_csv(OUTPUT_FILE)
-    print(f"Saved consolidated close prices to {OUTPUT_FILE}")
+    # Download historical data
+    download_historical_data(tickers, HISTORICAL_DIR, START_DATE)
 
 
 if __name__ == "__main__":
-    download_consolidated_close_prices()
+    main()
