@@ -1,8 +1,8 @@
 
-# **✨ InsightInvest - Economic and Financial Insights Platform**
+# **✨ Portfolio 360 - Economic, Financial and Invesment Insights Platform**
 
 ## **🌟 Overview**
-InsightInvest is a powerful platform for **economic and financial analysis**, offering tools to **analyze historical stock data**, **evaluate economic factors**, and **build optimized portfolios**. The platform leverages **cutting-edge data engineering**, **predictive analytics**, and **interactive dashboards** to provide investors with actionable insights.
+Portfolio 360 is a powerful platform for **economic and financial analysis**, offering tools to **analyze historical stock data**, **evaluate economic factors**, and **build optimized portfolios**. The platform leverages **cutting-edge data engineering**, **predictive analytics**, and **interactive dashboards** to provide investors with actionable insights.
 
 Built on a **Medallion Architecture** (Bronze-Silver-Gold), InsightInvest ensures **scalability**, **data accuracy**, and **seamless cloud migration**—future-proofed for **Microsoft Fabric**.
 
