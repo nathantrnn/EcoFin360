@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 # File paths
 SP500_TICKERS_FILE = 'data/bronze/stocks/SP500-tickers.csv'
-HISTORICAL_FILE = 'data/bronze/stocks/historical/SP500-adj-close.csv'
+HISTORICAL_FILE = 'data/bronze/stocks/SP500-adj-close.csv'
 
 
 def read_tickers(file_path):
