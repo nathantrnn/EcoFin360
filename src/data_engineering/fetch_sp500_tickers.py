@@ -1,10 +1,35 @@
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from src.utils.file_utils import save_csv, load_csv
+import os
 
 # File path for S&P 500 tickers
 SP500_TICKERS_FILE = "data/bronze/stocks/SP500-tickers.csv"
+
+
+def save_csv(data, file_path, index=False):
+    """
+    Save data (dictionary or DataFrame) to a CSV file.
+    """
+    os.makedirs(os.path.dirname(file_path), exist_ok=True)
+    if isinstance(data, dict):
+        pd.DataFrame(data).to_csv(file_path, index=index)
+    elif isinstance(data, pd.DataFrame):
+        data.to_csv(file_path, index=index)
+    else:
+        raise ValueError("Data must be a dictionary or pandas DataFrame.")
+
+
+def load_csv(file_path, index_col=None):
+    """
+    Load a CSV file and return its content as a pandas DataFrame.
+    """
+    if os.path.exists(file_path):
+        return pd.read_csv(file_path, index_col=index_col)
+    else:
+        if index_col:
+            return pd.DataFrame(columns=[index_col])
+        return pd.DataFrame()
 
 
 def fetch_sp500_tickers_from_wikipedia():
@@ -22,8 +47,9 @@ def fetch_sp500_tickers_from_wikipedia():
         if not table:
             raise ValueError("S&P 500 table not found on Wikipedia page.")
 
+        # Replace `.` with `-` in tickers
         tickers = [
-            row.find_all("td")[0].text.strip()
+            row.find_all("td")[0].text.strip().replace(".", "-")
             for row in table.find_all("tr")[1:]
         ]
         return tickers
