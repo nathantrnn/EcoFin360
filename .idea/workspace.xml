@@ -4,17 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86bbdb44-5d4c-4921-8595-efc6d7d411c8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/data/bronze/stocks/SP500-adj-close.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/bronze/stocks/SP500-adj-close.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/bronze/stocks/SP500-tickers.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/bronze/stocks/SP500-tickers.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_engineering/download_historical_prices.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_engineering/download_historical_prices.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/data_engineering/fetch_sp500_tickers.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/data_engineering/fetch_sp500_tickers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/file_ultis.py" beforeDir="false" />
+    <list default="true" id="86bbdb44-5d4c-4921-8595-efc6d7d411c8" name="Changes" comment="Upload fetching daily stock prices">
+      <change afterPath="$PROJECT_DIR$/src/transformations/calculate_daily_return.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/transformations/calculate_daily_return_csv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/transformations/clean_stock_data_csv.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/bronze/stocks/SP500-adj-close.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transformations/clean_stock_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transformations/clean_stock_data.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="Jupyter Notebook" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -68,11 +79,35 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734307764385</updated>
-      <workItem from="1734307766368" duration="3433000" />
+      <workItem from="1734307766368" duration="17050000" />
     </task>
+    <task id="LOCAL-00001" summary="Upload fetching daily stock prices">
+      <option name="closed" value="true" />
+      <created>1734311286492</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1734311286492</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Upload fetching daily stock prices" />
+    <option name="LAST_COMMIT_MESSAGE" value="Upload fetching daily stock prices" />
   </component>
 </project>
