@@ -4,15 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="86bbdb44-5d4c-4921-8595-efc6d7d411c8" name="Changes" comment="Upload fetching daily stock prices">
-      <change afterPath="$PROJECT_DIR$/src/transformations/calculate_daily_return.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/transformations/calculate_daily_return_csv.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/transformations/clean_stock_data_csv.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test.ipynb" afterDir="false" />
+    <list default="true" id="86bbdb44-5d4c-4921-8595-efc6d7d411c8" name="Changes" comment="Upload calculate daily returns">
+      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/transformations/analyze_annual_stock_performance.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/bronze/stocks/SP500-adj-close.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close/_delta_log/00000000000000000000.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close/part-00001-e02cc650-ad29-442e-a433-538d2f1f7251-c000.snappy.parquet" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/silver/stocks/cleaned_241216-SP500-adj-close/_delta_log/00000000000000000000.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/silver/stocks/cleaned_241216-SP500-adj-close/part-00001-71f421a0-eeb7-4cc0-ba37-961874352557-c000.snappy.parquet" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transformations/calculate_daily_return.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transformations/calculate_daily_return.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transformations/calculate_daily_return_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/calculate_daily_return_csv.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/transformations/clean_stock_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transformations/clean_stock_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transformations/clean_stock_data_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/clean_stock_data_csv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,9 +26,20 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="Jupyter Notebook" />
+        <option value="Python Script" />
       </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys; print('Python %s on %s' % (sys.version, sys.platform)); sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo, NoAppException&#10;for module in [&quot;main.py&quot;, &quot;wsgi.py&quot;, &quot;app.py&quot;]:&#10;    try: locals().update(ScriptInfo(app_import_path=module, create_app=None).load_app().make_shell_context()); print(&quot;\nFlask App: %s&quot; % app.import_name); break&#10;    except NoAppException: pass" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
     </option>
   </component>
   <component name="Git.Settings">
@@ -42,6 +57,9 @@
     "accountId": "ca8d43a3-9d69-4961-b724-74cad29f8a39"
   }
 }]]></component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 6
 }]]></component>
@@ -60,9 +78,32 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "settings.qodana",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="QodanaHighlightedReportService">
+    <option name="localRunNotPublishedPersistedInfo">
+      <LocalReportPersistedInfo>
+        <option name="path" value="/private/var/folders/6z/8dcml5zn1z72cwp99dc5xc2c0000gn/T/qodana_output/qodana.sarif.json" />
+        <option name="reportGuid" value="a8a9f4e8-1ded-4af1-8d90-593708873729" />
+        <option name="reportName" value="investment-analysis/qodana/2024-12-16" />
+      </LocalReportPersistedInfo>
+    </option>
+  </component>
+  <component name="QodanaIsSelectedPersistenceService">
+    <option name="selectedOrLoading" value="true" />
+  </component>
+  <component name="QodanaReportsService">
+    <option name="descriptions">
+      <ReportDescription localRun="true" path="/private/var/folders/6z/8dcml5zn1z72cwp99dc5xc2c0000gn/T/qodana_output/qodana.sarif.json" reportGuid="a8a9f4e8-1ded-4af1-8d90-593708873729" reportId="investment-analysis/qodana/2024-12-16" />
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/tests" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -79,7 +120,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734307764385</updated>
-      <workItem from="1734307766368" duration="17050000" />
+      <workItem from="1734307766368" duration="24237000" />
     </task>
     <task id="LOCAL-00001" summary="Upload fetching daily stock prices">
       <option name="closed" value="true" />
@@ -89,7 +130,23 @@
       <option name="project" value="LOCAL" />
       <updated>1734311286492</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Upload calculate daily returns">
+      <option name="closed" value="true" />
+      <created>1734325366722</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734325366722</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Upload calculate daily returns">
+      <option name="closed" value="true" />
+      <created>1734325375774</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734325375774</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -108,6 +165,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Upload fetching daily stock prices" />
-    <option name="LAST_COMMIT_MESSAGE" value="Upload fetching daily stock prices" />
+    <MESSAGE value="Upload calculate daily returns" />
+    <option name="LAST_COMMIT_MESSAGE" value="Upload calculate daily returns" />
   </component>
 </project>

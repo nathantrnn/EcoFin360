@@ -1,176 +1,148 @@
 import os
 import glob
 import pandas as pd
-from deltalake.writer import write_deltalake
 import logging
-import re  # For extracting dates from filenames
+import re
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 # Directories for input and output
-CLEANED_DATA_DIR = "data/silver/stocks/"  # Directory where cleaned data is stored
-DAILY_RETURN_DIR = "data/silver/returns/"  # Directory where daily return data will be stored
-
-# Ensure the daily returns directory exists
+CLEANED_DATA_DIR = "data/silver/stocks/"  # Directory for cleaned data
+DAILY_RETURN_DIR = "data/silver/returns/"  # Output directory for daily returns
 os.makedirs(DAILY_RETURN_DIR, exist_ok=True)
 
 
-def get_latest_cleaned_file(directory: str) -> str:
+def get_latest_file(directory: str, pattern: str) -> str:
     """
-    Get the latest cleaned file from the directory based on the filename format.
+    Get the latest file in the directory matching the given filename pattern.
 
     Args:
-        directory (str): Directory where the cleaned files are stored.
+        directory (str): Path to the directory containing the files.
+        pattern (str): Glob pattern for matching filenames (e.g., 'cleaned_*SP500-adj-close').
 
     Returns:
-        str: Full path to the latest cleaned file.
+        str: Path to the latest file based on modification time.
 
     Raises:
-        FileNotFoundError: If no cleaned files are found in the directory.
+        FileNotFoundError: If no files matching the pattern are found.
     """
-    cleaned_files = glob.glob(
-        os.path.join(directory, "cleaned_*SP500-adj-close"))  # Only look for Parquet files
-    if not cleaned_files:
-        raise FileNotFoundError("No cleaned files found in the specified directory.")
-
-    # Use modification time to find the latest file
-    latest_file = max(cleaned_files, key=os.path.getmtime)
-    logger.info(f"Latest cleaned file identified: {latest_file}")
+    files = glob.glob(os.path.join(directory, pattern))
+    if not files:
+        raise FileNotFoundError(f"No files matching pattern '{pattern}' found in directory '{directory}'.")
+    latest_file = max(files, key=os.path.getmtime)
+    logger.info(f"Latest file identified: {latest_file}")
     return latest_file
 
 
-def extract_date_from_filename(filename: str) -> str:
+def extract_date(filename: str, regex: str) -> str:
     """
-    Extracts the date in YYMMDD format from the cleaned file's name.
+    Extract a substring (e.g., date) from a filename based on a given regex pattern.
 
     Args:
-        filename (str): Name of the cleaned file (e.g., 'cleaned_231015-SP500-adj-close.parquet').
+        filename (str): The filename to extract the substring from.
+        regex (str): The regular expression to match and extract the desired substring.
 
     Returns:
-        str: The extracted date in YYMMDD format.
+        str: The matched substring.
 
     Raises:
-        ValueError: If no date is found in the filename.
+        ValueError: If no match is found in the filename.
     """
-    match = re.search(r"cleaned_(\d{6})-", filename)
+    match = re.search(regex, filename)
     if not match:
-        raise ValueError(f"Filename does not contain a valid date: {filename}")
-    return match.group(1)  # Return the date part (YYMMDD)
-
-"""
+        raise ValueError(f"Filename '{filename}' does not match the expected pattern: '{regex}'")
+    return match.group(1)
 
 
-def calculate_and_save_daily_returns(file_path: str, output_dir: str) -> None:
-    try:
-        # Loading cleaned data
-        logger.info(f"Loading cleaned data from: {file_path}")
-        stock_data = pd.read_parquet(file_path)
+def calculate_daily_returns(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculate daily percentage returns for stock data.
 
-        # Ensure only numeric data is used for daily returns calculation
-        numeric_data = stock_data.select_dtypes(include=["number"])
+    Args:
+        data (pd.DataFrame): DataFrame containing stock prices with a 'Date' column.
 
-        # Calculate daily returns
-        daily_returns = numeric_data.pct_change(fill_method=None)
+    Returns:
+        pd.DataFrame: DataFrame with daily percentage returns, including the 'Date' column.
+    """
+    if 'Date' not in data.columns and data.index.name != 'Date':
+        raise ValueError("The dataset must include a 'Date' column or index.")
 
-        # Round the daily returns to 3 decimal places
-        daily_returns = daily_returns.round(3)
+    # Set 'Date' as a column if it is the index
+    if data.index.name == 'Date':
+        data = data.reset_index()
 
-        # Restore original index (if necessary)
-        daily_returns.index = stock_data.index
+    # Ensure the 'Date' column is present
+    date_column = data['Date']
 
-        # Extract the date for the output filename
-        filename = os.path.basename(file_path)
-        date_part = extract_date_from_filename(filename)
+    # Select only numeric columns for return calculations
+    numeric_data = data.select_dtypes(include=["number"])
+    if numeric_data.empty:
+        raise ValueError("No numeric data found to calculate returns.")
 
-        # Generate file names
-        csv_output_file_name = f"returns_cleaned_{date_part}-SP500-adj-close.csv"
-        csv_output_file_path = os.path.join(output_dir, csv_output_file_name)
+    # Calculate daily returns and round to 3 decimal places
+    daily_returns = numeric_data.pct_change(fill_method=None).round(3)
 
-        delta_table_dir_name = f"returns_cleaned_{date_part}-SP500-adj-close"
-        delta_table_dir_path = os.path.join(output_dir, delta_table_dir_name)
+    # Insert the 'Date' column back into the results
+    daily_returns.insert(0, 'Date', date_column)
+    return daily_returns
 
-        # Save daily returns to a CSV file
-        logger.info(f"Saving daily returns to CSV: {csv_output_file_path}")
-        daily_returns.to_csv(csv_output_file_path)
 
-        # Save daily returns to Delta Lake directory
-        logger.info(f"Saving daily returns to Delta Lake: {delta_table_dir_path}")
-        write_deltalake(table_or_uri=delta_table_dir_path, data=daily_returns, mode="overwrite")
+def save_daily_returns(daily_returns: pd.DataFrame, date_part: str, output_dir: str):
+    """
+    Save the daily returns DataFrame as both a CSV file and a single Parquet file.
 
-        # Display the first 5 rows of the saved daily returns
-        logger.info(f"Loading and showing a sample of the saved file: {csv_output_file_path}")
-        daily_returns_sample = daily_returns.head()
-        print("Sample of the saved daily returns:")
-        print(daily_returns_sample)
+    Args:
+        daily_returns (pd.DataFrame): DataFrame containing daily returns.
+        date_part (str): Date string for naming the output files.
+        output_dir (str): Base directory for saving files.
+    """
+    # Define file paths
+    csv_file = os.path.join(output_dir, f"returns_cleaned_{date_part}-SP500-adj-close.csv")
+    parquet_file = os.path.join(output_dir, f"returns_cleaned_{date_part}-SP500-adj-close.parquet")
 
-    except Exception as e:
-        logger.error(f"An error occurred while processing {file_path}: {e}")
-        raise
-"""
+    # Save as CSV
+    logger.info(f"Saving daily returns to CSV: {csv_file}")
+    daily_returns.to_csv(csv_file, index=False)
 
-def calculate_and_save_daily_returns(delta_table_path: str, output_dir: str) -> None:
-    try:
-        # Read the Delta Lake directory as a Parquet file
-        logger.info(f"Loading cleaned data from Delta Lake folder: {delta_table_path}")
-        stock_data = pd.read_parquet(delta_table_path)  # Use pandas to read the Parquet data
-
-        # Ensure only numeric data is used for daily returns calculation
-        numeric_data = stock_data.select_dtypes(include=["number"])
-
-        # Calculate daily returns
-        daily_returns = numeric_data.pct_change(fill_method=None)
-
-        # Round the daily returns to 3 decimal places
-        daily_returns = daily_returns.round(3)
-
-        # Restore original index (if necessary)
-        daily_returns.index = stock_data.index
-
-        # Extract the date for the output filename
-        delta_dir_name = os.path.basename(delta_table_path)
-        date_part = extract_date_from_filename(delta_dir_name)
-
-        # Generate file names for the outputs
-        csv_output_file_name = f"returns_cleaned_{date_part}-SP500-adj-close.csv"
-        csv_output_file_path = os.path.join(output_dir, csv_output_file_name)
-
-        delta_output_dir_name = f"returns_cleaned_{date_part}-SP500-adj-close"
-        delta_output_dir_path = os.path.join(output_dir, delta_output_dir_name)
-
-        # Save daily returns to a CSV file
-        logger.info(f"Saving daily returns to CSV: {csv_output_file_path}")
-        daily_returns.to_csv(csv_output_file_path)
-
-        # Save daily returns to Delta Lake directory
-        logger.info(f"Saving daily returns to Delta Lake: {delta_output_dir_path}")
-        write_deltalake(table_or_uri=delta_output_dir_path, data=daily_returns, mode="overwrite")
-
-        # Display the first 5 rows of the saved daily returns
-        logger.info(f"Sample of the saved daily returns into: {csv_output_file_path}")
-        daily_returns_sample = daily_returns.head()
-        print("Sample of the saved daily returns:")
-        print(daily_returns_sample)
-
-    except Exception as e:
-        logger.error(f"An error occurred while processing the Delta Lake folder {delta_table_path}: {e}")
-        raise
+    # Save as a single Parquet file
+    logger.info(f"Saving daily returns to Parquet: {parquet_file}")
+    daily_returns.to_parquet(parquet_file, index=False, engine="pyarrow")
 
 
 def main():
     """
-    Main function to calculate daily returns for the latest cleaned file and save it as Parquet in Delta Lake format.
+    Main function to calculate and save daily returns for the latest cleaned stock data file.
     """
     try:
-        # Find the latest cleaned stock data file
-        latest_file_path = get_latest_cleaned_file(CLEANED_DATA_DIR)
+        # Get the latest cleaned file
+        latest_file = get_latest_file(CLEANED_DATA_DIR, "cleaned_*SP500-adj-close.parquet")
 
-        # Calculate and save daily returns for the latest cleaned file
-        calculate_and_save_daily_returns(latest_file_path, DAILY_RETURN_DIR)
+        # Extract the date from the filename
+        date_part = extract_date(
+            os.path.basename(latest_file), r"cleaned_(\d{6})-"
+        )
 
-    except FileNotFoundError as fnf_error:
-        logger.error(f"FileNotFoundError: {fnf_error}")
+        # Load the cleaned data
+        logger.info(f"Loading data from: {latest_file}")
+        stock_data = pd.read_parquet(latest_file)
+
+        # Calculate daily returns
+        logger.info("Calculating daily returns...")
+        daily_returns = calculate_daily_returns(stock_data)
+
+        # Save the daily returns
+        save_daily_returns(daily_returns, date_part, DAILY_RETURN_DIR)
+
+        # Display a sample of the results
+        logger.info("Sample of the calculated daily returns:")
+        logger.info(f"\n{daily_returns.head()}")
+
+    except FileNotFoundError as e:
+        logger.error(f"FileNotFoundError: {e}")
+    except ValueError as e:
+        logger.error(f"ValueError: {e}")
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
 
