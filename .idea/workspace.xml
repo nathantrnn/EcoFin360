@@ -5,18 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="86bbdb44-5d4c-4921-8595-efc6d7d411c8" name="Changes" comment="Upload calculate daily returns">
-      <change afterPath="$PROJECT_DIR$/qodana.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/transformations/analyze_annual_stock_performance.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close.csv" beforeDir="false" afterPath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close/_delta_log/00000000000000000000.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/silver/returns/returns_cleaned_241216-SP500-adj-close/part-00001-e02cc650-ad29-442e-a433-538d2f1f7251-c000.snappy.parquet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/silver/stocks/cleaned_241216-SP500-adj-close/_delta_log/00000000000000000000.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/silver/stocks/cleaned_241216-SP500-adj-close/part-00001-71f421a0-eeb7-4cc0-ba37-961874352557-c000.snappy.parquet" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformations/calculate_daily_return.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transformations/calculate_daily_return.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformations/calculate_daily_return_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/calculate_daily_return_csv.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/transformations/clean_stock_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/transformations/clean_stock_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/transformations/clean_stock_data_csv.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/clean_stock_data_csv.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -120,7 +110,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1734307764385</updated>
-      <workItem from="1734307766368" duration="24237000" />
+      <workItem from="1734307766368" duration="25160000" />
     </task>
     <task id="LOCAL-00001" summary="Upload fetching daily stock prices">
       <option name="closed" value="true" />

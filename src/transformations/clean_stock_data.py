@@ -1,7 +1,8 @@
 import os
-import pandas as pd
 import glob
 import logging
+
+import pandas as pd
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
