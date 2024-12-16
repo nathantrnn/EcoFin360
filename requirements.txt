@@ -1,6 +1,9 @@
-    pandas
-    yfinance
-    numpy
-    matplotlib
-    notebook
-    pytest
+pandas~=2.2.3
+yfinance~=0.2.50
+numpy
+matplotlib
+notebook
+pytest
+python-dotenv~=0.21.0
+requests~=2.32.3
+beautifulsoup4~=4.12.3
